@@ -2,16 +2,20 @@
 #include <windows.h>
 
 /*
-보호할 메모리 주소는 반드시 VirtualAlloc이 사용되어야합니다.
-그렇지 않으면 전역변수를 참조하는 다른 함수들과 꼬여서 반드시 충돌이 발생합니다.
+사용 예제:
 
-예제)
+	int status = NomuGuard::InitNomuGuard([이곳에 콜백함수]);
+	if (status != NG_OK)
+	{
+		printf("Init failed: %d\n", status);
+		return 1;
+	}
 
-VirtualAlloc을 활용한 변수 생성
-int* pInput = (int*)VirtualAlloc(NULL, sizeof(int), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+	void* hpAddr = nullptr;
+	NomuGuard::ProtectMemoryINT(hpAddr, 100, 2);
 
-pInput을 500으로 초기화와 동시에 보호
-ProtectMemoryINT(pInput, 500);
+	보호가 끝나고 프로그램 종료전에 보호해제 필요
+	NomuGuard::UnprotectMemory(hpAddr);
 */
 
 // Return codes for every NomuGuard function.
