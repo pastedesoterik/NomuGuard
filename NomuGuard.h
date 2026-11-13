@@ -14,6 +14,18 @@ pInput을 500으로 초기화와 동시에 보호
 ProtectMemoryINT(pInput, 500);
 */
 
+enum NomuGuardStatus : int
+{
+	NG_OK = 0,
+	NG_ALREADY_INITIALIZED = 1,  // Init called twice (callback and VEH are NOT replaced)
+	NG_NTAPI_UNAVAILABLE = 2,    // Could not resolve ntdll exports
+	NG_INVALID_ARGUMENT = 3,     // null pointer or level not 1/2
+	NG_NOT_REGISTERED = 4,       // address was never protected (or already unprotected)
+	NG_ALREADY_REGISTERED = 5,   // address is already protected
+	NG_TYPE_MISMATCH = 6,        // e.g. protected as INT, accessed as INT64
+	NG_NOT_DEDICATED_PAGE = 7,   // address is not the base of its own committed RW private allocation
+	NG_SYSCALL_FAILED = 8        // an Nt* call returned a failure NTSTATUS
+};
 
 namespace NomuGuard
 {
